@@ -1,0 +1,766 @@
+/* ═══════════════════════════════════════════════════════════════
+   N.O.V.A — assistant conversationnel
+   Toutes les couleurs passent par des variables : surchargez-les
+   sur .root (ou via la prop `theme`) pour coller à votre charte.
+   ═══════════════════════════════════════════════════════════════ */
+
+.root {
+  --nova-bg: #ffffff;
+  --nova-fg: #0b0b0c;
+  --nova-muted: color-mix(in srgb, var(--nova-fg) 45%, transparent);
+  --nova-line: color-mix(in srgb, var(--nova-fg) 22%, transparent);
+  --nova-danger: #e5484d;
+  --nova-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --nova-pad: clamp(1.25rem, 3.2vw, 3rem);
+  --nova-dialog-size: clamp(1.6rem, 2.5vw, 2.6rem);
+  --nova-step-top: 30svh;
+  --nova-gap: 2.25rem;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--nova-bg);
+  color: var(--nova-fg);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark {
+  --nova-bg: #000000;
+  --nova-fg: #f4f4f2;
+}
+
+.srOnly {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
+}
+
+/* ─────────── Barre du haut ─────────── */
+
+.topbar {
+  position: absolute;
+  z-index: 5;
+  top: 1.25rem;
+  left: var(--nova-pad);
+  right: var(--nova-pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.brand {
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--nova-muted);
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 currentColor;
+  animation: novaPulse 2s var(--nova-ease) infinite;
+}
+
+/* ─────────── Personnage ─────────── */
+
+.visual {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  place-items: center;
+  padding: 4rem 2rem;
+  perspective: 1200px;
+}
+
+.float {
+  position: relative;
+  width: min(520px, 88%);
+  animation: novaFloat 7s ease-in-out infinite;
+}
+
+.monitor {
+  --nova-level: 0;
+  --nova-tx: 0;
+  --nova-ty: 0;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  transform: rotateY(calc(var(--nova-tx) * 10deg)) rotateX(calc(var(--nova-ty) * -7deg));
+  transform-style: preserve-3d;
+}
+
+.glow {
+  position: absolute;
+  inset: 12%;
+  z-index: -1;
+  border-radius: 40%;
+  background: var(--nova-accent);
+  filter: blur(60px);
+  opacity: calc(0.12 + var(--nova-level) * 0.45);
+}
+
+.bezel {
+  position: absolute;
+  inset: 0;
+  padding: 5.5%;
+  border-radius: 9% / 12%;
+  background: linear-gradient(150deg, #34373e 0%, #15161a 45%, #0b0b0d 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.6),
+    0 50px 80px -40px rgba(0, 0, 0, 0.6);
+}
+
+.glass {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6% / 8%;
+  background: #05070a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.32) 0 1px, transparent 1px 3px);
+}
+
+.glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 18% 0%, rgba(255, 255, 255, 0.12), transparent 50%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.led {
+  position: absolute;
+  left: 50%;
+  bottom: 2.2%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--nova-accent);
+  box-shadow: 0 0 8px var(--nova-accent);
+  opacity: calc(0.35 + var(--nova-level) * 0.65);
+}
+
+.ground {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: calc(100% + 2.5rem);
+  height: 1.25rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--nova-fg) 18%, transparent), transparent);
+  animation: novaShadow 7s ease-in-out infinite;
+}
+
+/* ─────────── Zone de dialogue ─────────── */
+
+.main {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  grid-row: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 var(--nova-pad);
+  scrollbar-width: none;
+}
+
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+.step {
+  position: relative;
+  padding-top: var(--nova-step-top);
+  padding-bottom: 7rem;
+}
+
+.dialog,
+.previous {
+  display: block;
+  margin: 0;
+  font-size: var(--nova-dialog-size);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  transform-origin: top left;
+  text-wrap: pretty;
+}
+
+.dialog {
+  transition:
+    transform 0.32s var(--nova-ease),
+    filter 0.32s var(--nova-ease),
+    opacity 0.32s var(--nova-ease);
+}
+
+.expanded .dialog {
+  transform: scale(0.9);
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.82em;
+  margin-left: 0.18em;
+  vertical-align: -0.06em;
+  background: currentColor;
+  animation: novaBlink 1s steps(1) infinite;
+}
+
+/* Phrase précédente : floutée au-dessus, cliquable pour revenir */
+.previous {
+  position: absolute;
+  top: var(--nova-step-top);
+  left: 0;
+  right: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.5;
+  filter: blur(4px);
+  transform: translateY(calc(-100% - var(--nova-gap))) scale(0.8);
+  transition:
+    transform 0.32s var(--nova-ease),
+    filter 0.32s var(--nova-ease),
+    opacity 0.32s var(--nova-ease);
+}
+
+.previous:hover {
+  filter: blur(2.5px);
+  opacity: 0.7;
+}
+
+/* Contenu (choix / champs) qui apparaît après la frappe */
+.content {
+  margin-top: 1.75rem;
+  opacity: 0;
+  transform: translateY(1.25rem);
+  pointer-events: none;
+  transition:
+    opacity 0.32s var(--nova-ease),
+    transform 0.32s var(--nova-ease);
+}
+
+.expanded .content {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 0.1s;
+}
+
+/* Transition « suivant » : la phrase monte et devient la précédente */
+.leaveFwd .dialog {
+  opacity: 0.5;
+  filter: blur(4px);
+  transform: translateY(calc(-100% - var(--nova-gap))) scale(0.8);
+}
+
+.leaveFwd .previous {
+  opacity: 0;
+  transform: translateY(calc(-200% - var(--nova-gap))) scale(0.5);
+}
+
+.leaveFwd .content,
+.leaveBack .content {
+  opacity: 0;
+  transform: translateY(-0.75rem);
+  transition-delay: 0s;
+}
+
+/* Transition « retour » : la précédente redescend */
+.leaveBack .dialog {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.leaveBack .previous {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.enterBack .previous {
+  animation: novaPrevIn 0.32s var(--nova-ease) both;
+}
+
+/* ─────────── Boutons ─────────── */
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  max-width: 32rem;
+}
+
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.65em 1.35em;
+  border: 1px solid var(--nova-fg);
+  border-radius: 999px;
+  background: var(--nova-fg);
+  color: var(--nova-bg);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 0.2s var(--nova-ease),
+    background-color 0.2s var(--nova-ease),
+    color 0.2s var(--nova-ease);
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s var(--nova-ease);
+}
+
+.button:hover::before {
+  opacity: 0.14;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:focus-visible,
+.back:focus-visible,
+.sound:focus-visible {
+  outline: 2px solid var(--nova-fg);
+  outline-offset: 3px;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--nova-fg);
+  border-color: var(--nova-line);
+}
+
+/* ─────────── Formulaire ─────────── */
+
+.form {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 32rem;
+}
+
+.field {
+  position: relative;
+  padding-top: 1.1rem;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--nova-line);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.15rem;
+  outline: none;
+  transition: border-color 0.2s var(--nova-ease);
+}
+
+.input:focus {
+  border-bottom-color: var(--nova-fg);
+}
+
+.textarea {
+  min-height: 2.4em;
+  resize: none;
+  overflow: hidden;
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  top: 1.55rem;
+  color: var(--nova-muted);
+  font-size: 1.15rem;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.2s var(--nova-ease);
+}
+
+.label em {
+  font-style: normal;
+  opacity: 0.7;
+}
+
+.input:focus + .label,
+.input:not(:placeholder-shown) + .label {
+  transform: translateY(-1.35rem) scale(0.72);
+}
+
+.invalid {
+  border-bottom-color: var(--nova-danger);
+}
+
+.error {
+  margin: 0.4rem 0 0;
+  color: var(--nova-danger);
+  font-size: 0.8rem;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.checks .error {
+  flex-basis: 100%;
+}
+
+.check {
+  position: relative;
+  cursor: pointer;
+}
+
+.check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.55em 1.2em 0.55em 0.6em;
+  border: 1px solid var(--nova-line);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  transition:
+    background-color 0.2s var(--nova-ease),
+    color 0.2s var(--nova-ease),
+    border-color 0.2s var(--nova-ease);
+}
+
+.check:hover span {
+  border-color: var(--nova-fg);
+}
+
+.check input:focus-visible + span {
+  outline: 2px solid var(--nova-fg);
+  outline-offset: 3px;
+}
+
+.check input:checked + span {
+  background: var(--nova-fg);
+  border-color: var(--nova-fg);
+  color: var(--nova-bg);
+}
+
+.checkIcon {
+  position: relative;
+  width: 1.3em;
+  height: 1.3em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.check input:checked + span .checkIcon {
+  background: var(--nova-bg);
+  border-color: var(--nova-bg);
+}
+
+.check input:checked + span .checkIcon::after {
+  content: '';
+  position: absolute;
+  left: 34%;
+  top: 18%;
+  width: 28%;
+  height: 48%;
+  border: solid var(--nova-fg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hint {
+  color: var(--nova-muted);
+  font-size: 0.8rem;
+}
+
+/* ─────────── Contrôles ─────────── */
+
+.back,
+.sound {
+  position: absolute;
+  z-index: 6;
+  bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--nova-fg);
+  color: var(--nova-bg);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    opacity 0.3s var(--nova-ease),
+    transform 0.3s var(--nova-ease);
+}
+
+.back {
+  left: var(--nova-pad);
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+}
+
+.ctlHidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+.sound {
+  right: var(--nova-pad);
+  gap: 0.5em;
+  height: 2.75rem;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: transparent;
+  color: var(--nova-fg);
+  box-shadow: inset 0 0 0 1px var(--nova-line);
+}
+
+.soundOn {
+  background: var(--nova-fg);
+  color: var(--nova-bg);
+  box-shadow: none;
+}
+
+.progress {
+  position: absolute;
+  z-index: 7;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--nova-fg);
+  transform: scaleX(var(--nova-progress, 0));
+  transform-origin: left center;
+  transition: transform 0.5s var(--nova-ease);
+}
+
+/* ─────────── Mobile : écran en haut, panneau en bas ─────────── */
+
+@media (max-width: 899px) {
+  .root {
+    --nova-dialog-size: clamp(1.3rem, 5.4vw, 1.75rem);
+    --nova-step-top: 1.75rem;
+    --nova-gap: 1.25rem;
+    grid-template-columns: 1fr;
+    min-height: 560px;
+  }
+
+  .visual {
+    grid-column: 1;
+    align-self: start;
+    height: 46%;
+    padding: 3.25rem 1rem 1rem;
+    transition: height 0.4s var(--nova-ease);
+  }
+
+  .compact .visual {
+    height: 76%;
+  }
+
+  .float {
+    width: min(66vw, 300px);
+  }
+
+  .compact .float {
+    width: min(84vw, 420px);
+  }
+
+  .ground {
+    display: none;
+  }
+
+  .main {
+    position: absolute;
+    inset: 42% 0 0 0;
+    border-radius: 18px 18px 0 0;
+    background: var(--nova-bg);
+    box-shadow: 0 -12px 40px -20px rgba(0, 0, 0, 0.25);
+    transition: inset 0.4s var(--nova-ease);
+  }
+
+  .compact .main {
+    inset: 72% 0 0 0;
+  }
+
+  .previous {
+    display: none;
+  }
+
+  .step {
+    padding-bottom: 6rem;
+  }
+
+  .back,
+  .sound {
+    bottom: 1rem;
+  }
+
+  .hint {
+    display: none;
+  }
+}
+
+/* ─────────── Animations ─────────── */
+
+@keyframes novaBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes novaFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes novaShadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.85);
+    opacity: 0.6;
+  }
+}
+
+@keyframes novaPulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 60%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+@keyframes novaPrevIn {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-200% - var(--nova-gap))) scale(0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float,
+  .ground,
+  .dot,
+  .cursor {
+    animation: none;
+  }
+
+  .root *,
+  .root *::before {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* En thème sombre, on détache légèrement l'écran du fond */
+.dark .bezel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 50px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+/* ─────────── Intégration portfolio : titrage en Inter Tight ─────────── */
+.dialog,
+.previous {
+  font-family: var(--font-inter-tight), var(--font-inter), system-ui, sans-serif;
+}
+
+/* Sous l'en-tête fixe du portfolio : la phrase précédente ne doit pas le chevaucher */
+@media (min-width: 900px) {
+  .root {
+    --nova-step-top: 38svh;
+  }
+}
+
+/* Barre N.O.V.A sous l'en-tête fixe du portfolio */
+.topbar {
+  top: calc(var(--header-h) - 0.6rem);
+}
+
+@media (max-width: 899px) {
+  .visual {
+    padding-top: 6rem;
+  }
+}

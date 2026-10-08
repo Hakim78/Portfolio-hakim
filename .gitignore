@@ -1,35 +1,51 @@
-node_modules/
-venv/
-.venv/
-env/
-.conda/
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-dist/
-build/
-.next/
-out/
-.cache/
-coverage/
-screenshots/
-logs/
-*.log
-*.h5
-*.pt
-*.pth
-*.onnx
-*.pkl
-*.joblib
-*.npy
-*.npz
-*.ckpt
-*.zip
-*.7z
-*.7z.*
-*.rar
-.env
-.env.*
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
-.idea/
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
 *.tsbuildinfo
+next-env.d.ts
+
+# archives locales (ancien code, références d'inspiration, réglages Claude Code)
+/_archive
+/src-avant-refonte-*.zip
+/inspiration
+/.claude
+/.claude_backup
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+Thumbs.db

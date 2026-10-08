@@ -1,7 +1,10 @@
-import type { Metadata } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { ClientLayout } from './client-layout'
+import { Providers } from './providers'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
+import { site } from '@/data/site'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -9,83 +12,66 @@ const inter = Inter({
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
+const interTight = Inter_Tight({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-inter-tight',
   display: 'swap',
+  weight: ['400', '500'],
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains-mono',
   display: 'swap',
+  weight: ['400', '500'],
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://hakim.dev'),
+  metadataBase: new URL(site.url),
   title: {
-    default: 'Hakim | Full-Stack & AI Developer',
-    template: '%s | Hakim',
+    default: `${site.name} — ${site.role}`,
+    template: `%s — ${site.name}`,
   },
-  description:
-    'Développeur Full-Stack & IA spécialisé dans la création de systèmes intelligents. Computer Vision, NLP, MLOps et développement web moderne.',
-  keywords: [
-    'Développeur Full-Stack',
-    'Intelligence Artificielle',
-    'Machine Learning',
-    'Computer Vision',
-    'NLP',
-    'Python',
-    'React',
-    'Next.js',
-    'TensorFlow',
-    'PyTorch',
-  ],
-  authors: [{ name: 'Hakim' }],
-  creator: 'Hakim',
+  description: site.description,
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://hakim.dev',
-    siteName: 'Hakim Portfolio',
-    title: 'Hakim | Full-Stack & AI Developer',
-    description:
-      'Développeur Full-Stack & IA spécialisé dans la création de systèmes intelligents.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Hakim - Full-Stack & AI Developer',
-      },
-    ],
+    url: site.url,
+    siteName: site.name,
+    title: `${site.name} — ${site.role}`,
+    description: site.description,
+    images: [{ url: '/projects/cancer-pathologies.jpg', width: 1750, height: 1000, alt: site.name }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hakim | Full-Stack & AI Developer',
-    description:
-      'Développeur Full-Stack & IA spécialisé dans la création de systèmes intelligents.',
-    images: ['/og-image.png'],
+    title: `${site.name} — ${site.role}`,
+    description: site.description,
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="fr"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans bg-dark text-white antialiased">
-        <ClientLayout>{children}</ClientLayout>
+      <body className="font-sans">
+        <Providers>
+          <Header />
+          {/* La page passe au-dessus du footer fixe et le révèle en fin de défilement */}
+          <div className="relative z-10 bg-bg" style={{ marginBottom: 'var(--footer-h, 0px)' }}>
+            {children}
+          </div>
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

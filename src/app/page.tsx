@@ -1,15 +1,14 @@
-import { HeroSection } from '@/components/sections/HeroSection'
-import { FeaturedProjects } from '@/components/sections/FeaturedProjects'
-import { SkillsSection } from '@/components/sections/SkillsSection'
-import { ContactCTA } from '@/components/sections/ContactCTA'
+import { WorkStrip } from '@/components/work/WorkStrip'
+import { Profile } from '@/components/sections/Profile'
+import NovaAssistant from '@/components/nova/NovaAssistant'
+import { featuredProjects } from '@/data/projects'
 
 export default function HomePage() {
   return (
-    <>
-      <HeroSection />
-      <FeaturedProjects />
-      <SkillsSection />
-      <ContactCTA />
-    </>
+    <main>
+      <WorkStrip projects={featuredProjects} />
+      <Profile />
+      <NovaAssistant id="contact" theme="dark" endpoint="/api/contact" />
+    </main>
   )
 }
