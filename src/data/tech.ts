@@ -1,34 +1,28 @@
 import {
-  siApacheairflow,
   siApachehadoop,
   siApachekafka,
-  siApachespark,
+  siBluetooth,
   siCelery,
   siClaude,
-  siDart,
-  siDocker,
   siFastapi,
-  siFlask,
-  siFlutter,
+  siGit,
+  siGithub,
   siGooglegemini,
   siGradio,
-  siHuggingface,
-  siKeras,
+  siHtml5,
+  siJavascript,
+  siJupyter,
   siMediapipe,
-  siMysql,
+  siMongodb,
   siNextdotjs,
   siNginx,
+  siNumpy,
   siOpencv,
-  siPhp,
-  siPostgresql,
-  siPython,
-  siPytorch,
-  siReact,
-  siRedis,
   siScikitlearn,
+  siStreamlit,
   siSupabase,
-  siTensorflow,
   siTypescript,
+  siVercel,
   siVite,
   siVuedotjs,
   siWhatsapp,
@@ -36,80 +30,109 @@ import {
 } from 'simple-icons'
 
 /**
- * Logos officiels (simple-icons) des langages, frameworks et marques.
- * `techIcon(label)` retrouve le logo d'une entrée de stack ; les libellés
- * sans logo (ConvNeXt, FAISS, AWS…) s'affichent en texte seul.
+ * Logos de langages et de marques, toujours en couleur (choix de Hakim).
+ * 1. PNG couleur repris de l'ancien portfolio (/public/assets/icons_stack)
+ * 2. sinon simple-icons avec la couleur officielle de la marque
+ * Les libellés sans logo (ConvNeXt, FAISS, LSTM…) s'affichent en texte seul.
  */
-const ICONS: Record<string, SimpleIcon> = {
-  python: siPython,
-  pytorch: siPytorch,
-  tensorflow: siTensorflow,
-  keras: siKeras,
-  'scikit-learn': siScikitlearn,
+export type TechLogoSpec = { kind: 'img'; src: string } | { kind: 'svg'; path: string; color: string }
+
+const PNG: Record<string, string> = {
+  python: 'Python.png',
+  pytorch: 'PyTorch.png',
+  tensorflow: 'TensorFlow.png',
+  keras: 'Keras.png',
+  react: 'React.png',
+  'node.js': 'Node.js.png',
+  flask: 'Flask.png',
+  php: 'PHP.png',
+  tailwind: 'Tailwind_CSS.png',
+  postgresql: 'PostgresSQL.png',
+  mysql: 'MySQL.png',
+  redis: 'Redis.png',
+  pandas: 'Pandas.png',
+  selenium: 'Selenium.png',
+  airflow: 'Apache_Airflow.png',
+  spark: 'spark.png',
+  elasticsearch: 'elasticsearch.png',
+  docker: 'Docker.png',
+  aws: 'AWS.png',
+  'hugging face': 'huggingface-color.png',
+  flutter: 'flutter_dart.png',
+  dart: 'flutter_dart.png',
+  stripe: 'stripe.png',
+  firebase: 'Firebase.png',
+  'app store': 'App_store.png',
+  'google play': 'google_play_store.png',
+  'ci/cd': 'ci_CD.png',
+  'computer vision': 'computer_vision.png',
+}
+
+const SVG: Record<string, SimpleIcon> = {
+  'next.js': siNextdotjs,
+  typescript: siTypescript,
+  javascript: siJavascript,
+  'html/css': siHtml5,
+  fastapi: siFastapi,
+  supabase: siSupabase,
   opencv: siOpencv,
   mediapipe: siMediapipe,
-  'hugging face': siHuggingface,
-  gradio: siGradio,
+  'scikit-learn': siScikitlearn,
   claude: siClaude,
   gemini: siGooglegemini,
-  'next.js': siNextdotjs,
-  react: siReact,
-  typescript: siTypescript,
-  vite: siVite,
-  'vue.js': siVuedotjs,
-  fastapi: siFastapi,
-  flask: siFlask,
-  php: siPhp,
-  flutter: siFlutter,
-  dart: siDart,
-  supabase: siSupabase,
-  postgresql: siPostgresql,
-  mysql: siMysql,
-  redis: siRedis,
-  celery: siCelery,
-  docker: siDocker,
-  nginx: siNginx,
-  airflow: siApacheairflow,
-  spark: siApachespark,
   kafka: siApachekafka,
   hdfs: siApachehadoop,
+  nginx: siNginx,
+  vercel: siVercel,
+  vite: siVite,
+  'vue.js': siVuedotjs,
+  gradio: siGradio,
+  celery: siCelery,
   whatsapp: siWhatsapp,
+  mongodb: siMongodb,
+  streamlit: siStreamlit,
+  git: siGit,
+  github: siGithub,
+  bluetooth: siBluetooth,
+  numpy: siNumpy,
+  jupyter: siJupyter,
 }
 
 const ALIASES: Record<string, string> = {
   'pytorch 2.0': 'pytorch',
   'next.js 14': 'next.js',
-  'claude api': 'claude',
-  'gemini api': 'gemini',
   'postgresql · supabase': 'supabase',
   'tensorflow 2.x': 'tensorflow',
+  'claude api': 'claude',
+  'gemini api': 'gemini',
+  'tailwind css': 'tailwind',
+  tailwindcss: 'tailwind',
+  'apache airflow': 'airflow',
+  'apache spark': 'spark',
+  'apache kafka': 'kafka',
+  'aws (ec2, s3)': 'aws',
+  'flutter / dart': 'flutter',
+  'scikit learn': 'scikit-learn',
+  sklearn: 'scikit-learn',
+  huggingface: 'hugging face',
 }
 
-export function techIcon(label: string): SimpleIcon | undefined {
-  const key = label.trim().toLowerCase()
-  return ICONS[ALIASES[key] ?? key]
+/** Couleur de marque lisible sur fond noir : les logos noirs passent en blanc cassé. */
+function brandColor(hex: string) {
+  const n = parseInt(hex, 16)
+  const r = (n >> 16) & 255
+  const g = (n >> 8) & 255
+  const b = n & 255
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+  return lum < 60 ? '#f4f4f2' : `#${hex}`
 }
 
-/** Sélection affichée dans le profil */
-export const toolbox: { label: string; icon: SimpleIcon }[] = [
-  { label: 'Python', icon: siPython },
-  { label: 'PyTorch', icon: siPytorch },
-  { label: 'TensorFlow', icon: siTensorflow },
-  { label: 'scikit-learn', icon: siScikitlearn },
-  { label: 'OpenCV', icon: siOpencv },
-  { label: 'Hugging Face', icon: siHuggingface },
-  { label: 'Claude', icon: siClaude },
-  { label: 'Gemini', icon: siGooglegemini },
-  { label: 'FastAPI', icon: siFastapi },
-  { label: 'Flask', icon: siFlask },
-  { label: 'Next.js', icon: siNextdotjs },
-  { label: 'React', icon: siReact },
-  { label: 'TypeScript', icon: siTypescript },
-  { label: 'Flutter', icon: siFlutter },
-  { label: 'Supabase', icon: siSupabase },
-  { label: 'PostgreSQL', icon: siPostgresql },
-  { label: 'Docker', icon: siDocker },
-  { label: 'Airflow', icon: siApacheairflow },
-  { label: 'Spark', icon: siApachespark },
-  { label: 'Kafka', icon: siApachekafka },
-]
+export function techLogo(label: string): TechLogoSpec | undefined {
+  const raw = label.trim().toLowerCase()
+  const key = ALIASES[raw] ?? raw
+  const png = PNG[key]
+  if (png) return { kind: 'img', src: `/assets/icons_stack/${png}` }
+  const icon = SVG[key]
+  if (icon) return { kind: 'svg', path: icon.path, color: brandColor(icon.hex) }
+  return undefined
+}

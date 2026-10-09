@@ -3,9 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RollText } from '@/components/ui/RollText'
-import { TechIcon } from '@/components/ui/TechIcon'
+import { TechChip } from '@/components/ui/TechLogo'
 import { categoryLabels, getProject, projects, statusLabels } from '@/data/projects'
-import { techIcon } from '@/data/tech'
 import { pad2 } from '@/lib/utils'
 
 type Params = { slug: string }
@@ -112,19 +111,11 @@ export default function ProjectPage({ params }: { params: Params }) {
 
           <p className="label mt-12 text-fg/50">Stack</p>
           <ul className="mt-4 flex flex-wrap gap-2">
-            {project.stack.map((s) => {
-              const icon = techIcon(s)
-              return (
-                <li
-                  key={s}
-                  style={icon ? ({ '--brand': `#${icon.hex}` } as React.CSSProperties) : undefined}
-                  className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-fg/80 transition-colors duration-300 hover:border-fg/40"
-                >
-                  {icon && <TechIcon icon={icon} size={14} className="text-fg/70 transition-colors duration-300 group-hover:text-[color:var(--brand)]" />}
-                  {s}
-                </li>
-              )
-            })}
+            {project.stack.map((s) => (
+              <li key={s}>
+                <TechChip name={s} size="md" />
+              </li>
+            ))}
           </ul>
         </aside>
 

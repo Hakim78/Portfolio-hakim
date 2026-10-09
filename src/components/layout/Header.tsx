@@ -22,7 +22,7 @@ export function Header() {
           {nav.map((item) => {
             // Sur l'accueil, les ancres restent des ancres (défilement Lenis)
             const href = pathname === '/' && item.href.startsWith('/#') ? item.href.slice(1) : item.href
-            const active = item.href === '/projects' && pathname.startsWith('/projects')
+            const active = item.href === '/#projets' && pathname.startsWith('/projects')
             return (
               <Link
                 key={item.href}

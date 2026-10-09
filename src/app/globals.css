@@ -12,7 +12,10 @@
   --fg-2: rgb(var(--fg-rgb) / 0.62);
   --fg-3: rgb(var(--fg-rgb) / 0.38);
   --line: rgb(var(--fg-rgb) / 0.14);
-  --mint: #6cffb8;
+  /* Accent : le vert émeraude de l'ancien portfolio */
+  --accent: #10b981;
+  --accent-2: #34d399;
+  --mint: var(--accent);
   --ease-main: cubic-bezier(0.625, 0.05, 0, 1);
   --gutter: clamp(1.25rem, 3.2vw, 3rem);
   --header-h: 4.5rem;
@@ -231,6 +234,148 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* ───────────────────────── Hero (terminal) ───────────────────────── */
+
+@keyframes hero-char {
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.hero-char {
+  opacity: 0;
+  filter: blur(4px);
+  animation: hero-char 0.08s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes hero-cursor {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.hero-cursor {
+  opacity: 0;
+  animation: hero-cursor 1s steps(1) infinite;
+}
+@keyframes hero-line {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.hero-line {
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(6px);
+  animation: hero-line 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes hero-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+.hero-bounce {
+  animation: hero-bounce 1.5s ease-in-out infinite;
+}
+@keyframes hero-wheel {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+.hero-wheel {
+  animation: hero-wheel 2s ease-in-out infinite;
+}
+@keyframes hero-hint {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-hint {
+  animation: hero-hint 0.8s 1.5s var(--ease-main) both;
+}
+
+/* ───────────────────────── Grille de projets ───────────────────────── */
+
+@keyframes grid-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.grid-enter {
+  animation: grid-enter 0.7s var(--ease-main) both;
+}
+
+/* ───────────────────────── Compétences (accordéon) ───────────────────────── */
+
+.skill-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.7s var(--ease-main);
+}
+.skill-body.is-open {
+  grid-template-rows: 1fr;
+}
+.skill-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.skill-visual {
+  opacity: 0;
+  transform: translateY(3%) scale(0.96);
+  clip-path: inset(100% 0 0 0 round 1.25rem);
+  transition:
+    clip-path 0.9s var(--ease-main),
+    opacity 0.5s var(--ease-main),
+    transform 0.9s var(--ease-main);
+}
+.skill-visual.is-active {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 0 0 round 1.25rem);
+}
+
+/* ───────────────────────── Formulaire ───────────────────────── */
+
+.field {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0.75rem 0;
+  background: transparent;
+  color: var(--fg);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s var(--ease-main);
+}
+.field:focus {
+  border-bottom-color: var(--fg);
 }
 
 /* ───────────────────────── Mouvement réduit ───────────────────────── */

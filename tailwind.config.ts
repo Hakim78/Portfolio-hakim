@@ -14,7 +14,9 @@ const config: Config = {
         elev: 'var(--bg-elev)',
         fg: 'rgb(var(--fg-rgb) / <alpha-value>)',
         line: 'var(--line)',
-        mint: '#6cffb8',
+        mint: 'var(--accent)',
+        accent: 'var(--accent)',
+        'accent-2': 'var(--accent-2)',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],

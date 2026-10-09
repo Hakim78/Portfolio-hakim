@@ -25,8 +25,10 @@ export interface Project {
   results: string[]
   stack: string[]
   links: ProjectLink[]
-  /** Visuel 1750×1000 (ratio 1.75) dans /public/projects */
+  /** Visuel 1750×1000 (ratio 1.75) pour la bande WebGL et la fiche */
   image?: string
+  /** Vignette de la grille (ratio libre) ; à défaut, `image` est utilisée */
+  cover?: string
   /** Présent dans la bande WebGL de la page d'accueil */
   featured?: boolean
 }
@@ -45,8 +47,9 @@ export const statusLabels: Record<Status, string> = {
 }
 
 /**
- * Ordre = ordre d'affichage. Les 4 premiers sont les projets vedettes.
- * TODO (Hakim) : vérifier les années et compléter les projets issus de GitHub / Hugging Face.
+ * Ordre = ordre d'affichage. Les projets `featured` forment la bande WebGL.
+ * Covers et liens de démo repris de l'ancien portfolio.
+ * TODO (Hakim) : vérifier les années des projets issus de GitHub / Hugging Face.
  */
 export const projects: Project[] = [
   {
@@ -66,7 +69,7 @@ export const projects: Project[] = [
       'Démo publique et modèle versionné sur Hugging Face',
     ],
     results: ['AUC-ROC 0,9979 sur le split de test verrouillé', '220 K patches PatchCamelyon', 'Inférence ≈ 0,8 s'],
-    stack: ['PyTorch 2.0', 'ConvNeXt', 'PatchCamelyon', 'Hugging Face', 'Next.js'],
+    stack: ['PyTorch', 'ConvNeXt', 'PatchCamelyon', 'Hugging Face', 'Next.js'],
     links: [
       { label: 'Voir la démo', href: 'https://frontend-cancer-pathologies.vercel.app/' },
       { label: 'Modèle Hugging Face', href: 'https://huggingface.co/hakim78/Cancer_pathos' },
@@ -92,7 +95,7 @@ export const projects: Project[] = [
       'Règles métier en base (fuseaux, numérotation légale, cycle de vie client)',
     ],
     results: ['Devis personnalisé en ≈ 2 min', '4 univers de service', 'En production, clients réels'],
-    stack: ['Next.js 14', 'FastAPI', 'PostgreSQL · Supabase', 'LLM', 'WhatsApp'],
+    stack: ['Next.js', 'FastAPI', 'Supabase', 'PostgreSQL', 'Claude', 'WhatsApp'],
     links: [{ label: 'Voir le site', href: 'https://frenchwash.app/' }],
     image: '/projects/frenchwash.jpg',
     featured: true,
@@ -115,7 +118,7 @@ export const projects: Project[] = [
       'Sitemap et SEO technique',
     ],
     results: ['5 collections', 'Livraison offerte dès 50 €', 'En production'],
-    stack: ['Vite', 'React', 'TypeScript'],
+    stack: ['Vite', 'React', 'TypeScript', 'Tailwind'],
     links: [{ label: 'Voir le site', href: 'https://www.mkmaccessoires.com/' }],
     image: '/projects/mkm-accessoires.jpg',
     featured: true,
@@ -130,17 +133,60 @@ export const projects: Project[] = [
     client: 'INTUITION Robotique & Technologies',
     status: 'production',
     description:
-      "Application compagnon du robot éducatif ilo, utilisée en classe du primaire à l'université. Elle pilote le robot en Bluetooth ou Wi-Fi, fait programmer en blocs, affiche les capteurs en temps réel et donne accès à une bibliothèque de cours et d'examens.",
+      "Application compagnon du robot éducatif ilo, utilisée en classe du primaire à l'université. Elle pilote le robot en Bluetooth ou Wi-Fi, fait programmer en blocs, affiche les capteurs en temps réel et donne accès à une bibliothèque de cours et d'examens. Publiée sur l'App Store et Google Play.",
     built: [
       'Pilotage par modules simples et modes autonomes (labyrinthe, suivi de ligne, couleurs)',
-      'Programmation par blocs',
+      'Programmation par blocs et animations Rive',
       'Visualisation des capteurs en temps réel (distance, lumière, couleurs, LED)',
       'Bibliothèque de cours, examens, connexion Bluetooth / Wi-Fi / serveur',
     ],
-    results: ['iOS, Android, macOS, web', 'Publiée sur l’App Store', 'Utilisée en établissement scolaire'],
-    stack: ['Flutter', 'Dart', 'Bluetooth', 'Wi-Fi'],
-    links: [{ label: 'App Store', href: 'https://apps.apple.com/fr/app/ilorobot/id6502907450' }],
+    results: ['iOS, Android, macOS, web', 'Publiée sur l’App Store et Google Play', 'Utilisée en établissement scolaire'],
+    stack: ['Flutter', 'Dart', 'Bluetooth', 'Firebase'],
+    links: [
+      { label: 'App Store', href: 'https://apps.apple.com/fr/app/ilorobot/id6502907450' },
+      { label: 'Google Play', href: 'https://play.google.com/store/apps/details?id=com.ilorobot.fluttercontroler' },
+    ],
     image: '/projects/ilorobot.jpg',
+    cover: '/assets/covers/cover_project_ilorobot1.png',
+    featured: true,
+  },
+  {
+    slug: 'nasa-anomaly',
+    title: 'NASA Anomaly Detection',
+    tagline: 'Détection d’anomalies sur la télémétrie satellite (LSTM)',
+    category: 'ia-ml',
+    year: '2025',
+    role: 'Ingénieur IA',
+    status: 'production',
+    description:
+      "Réseau LSTM entraîné sur des séries temporelles de télémétrie satellite de la NASA pour repérer les anomalies, avec une interface de suivi en temps réel.",
+    built: ['Modèle LSTM sur séries temporelles', 'Détection d’anomalies à seuils adaptatifs', 'Interface web de monitoring'],
+    results: [],
+    stack: ['Python', 'TensorFlow', 'LSTM', 'Pandas'],
+    links: [{ label: 'Voir la démo', href: 'https://anomaly-satellite-trm.vercel.app' }],
+    image: '/projects/nasa-anomaly.jpg',
+    cover: '/assets/covers/nasa_trm_cover.png',
+    featured: true,
+  },
+  {
+    slug: 'asl-sign-recognition',
+    title: 'ASL Sign Recognition',
+    tagline: 'Alphabet de la langue des signes en temps réel',
+    category: 'ia-ml',
+    year: '2026',
+    role: 'Ingénieur IA',
+    status: 'production',
+    description:
+      'Reconnaissance en temps réel de l’alphabet ASL par webcam : landmarks de la main, stabilisation temporelle, construction de mots et de phrases.',
+    built: ['21 landmarks MediaPipe', 'Stabilisation temporelle et auto-correction', 'Démo web et Hugging Face'],
+    results: ['≈ 94 % de précision', '30 images / s'],
+    stack: ['TensorFlow', 'MediaPipe', 'OpenCV', 'Python'],
+    links: [
+      { label: 'Voir la démo', href: 'https://asl-sign-recognition.vercel.app/' },
+      { label: 'GitHub', href: 'https://github.com/Hakim78/AI-SignLanguage' },
+    ],
+    image: '/projects/asl-sign.jpg',
+    cover: '/assets/covers/asl_language_sign_cover.png',
     featured: true,
   },
 
@@ -158,8 +204,9 @@ export const projects: Project[] = [
       "Outil qui interroge ChatGPT, Claude et Gemini sur une marque et mesure sa « présence IA » : score de visibilité, suivi dans le temps, recommandations.",
     built: ['Analyse multi-LLM simultanée', 'Score de visibilité et historique', 'Recommandations et export de rapports'],
     results: ['3 LLM interrogés en parallèle'],
-    stack: ['Next.js', 'Python', 'OpenAI API', 'Claude API', 'Gemini API'],
+    stack: ['Next.js', 'Python', 'Claude', 'Gemini'],
     links: [{ label: 'Voir le site', href: 'https://ia-presence.facil-it.ai/' }],
+    cover: '/assets/covers/outil_3_Index_monitor.png',
   },
   {
     slug: 'seo-platform',
@@ -174,8 +221,9 @@ export const projects: Project[] = [
       "SaaS de génération de contenu SEO : clustering de mots-clés, rédaction et réécriture par plusieurs API d'IA, file d'attente asynchrone pour les gros volumes, tableau de bord.",
     built: ['Clustering de mots-clés', 'Rédaction et réécriture multi-API', 'File d’attente asynchrone (Celery, Redis)', 'Dashboard analytics'],
     results: ['+500 articles / mois', '< 30 s par article'],
-    stack: ['Python', 'Flask', 'PHP', 'MySQL', 'Redis', 'Celery', 'GPT-4', 'Claude'],
+    stack: ['Python', 'Flask', 'PHP', 'MySQL', 'Redis', 'Celery', 'Claude'],
     links: [{ label: 'Voir le site', href: 'https://seo.facil-it.ai/' }],
+    cover: '/assets/covers/outil_seo_facil_it.png',
   },
   {
     slug: 'e-reputation',
@@ -190,8 +238,25 @@ export const projects: Project[] = [
       "Tableau de bord de réputation en ligne : collecte automatisée, analyse de sentiment, visualisations et alertes.",
     built: ['Scraping multi-sources', 'Analyse de sentiment', 'Dashboards et alertes'],
     results: [],
-    stack: ['Next.js', 'Python', 'Flask', 'NLP', 'Recharts'],
+    stack: ['Next.js', 'Python', 'Flask', 'Selenium'],
     links: [{ label: 'Voir le site', href: 'https://e-reputation.facil-it.ai/' }],
+    cover: '/assets/covers/outil_1_E_reputation.png',
+  },
+  {
+    slug: 'heart-disease',
+    title: 'Heart Disease Prediction',
+    tagline: 'Prédiction du risque cardiaque à partir de données cliniques',
+    category: 'ia-ml',
+    year: '2024',
+    role: 'Ingénieur IA',
+    status: 'production',
+    description:
+      'Modèle de machine learning qui estime le risque de maladie cardiaque à partir de données cliniques, avec un tableau de bord interactif et des prédictions en temps réel.',
+    built: ['Modèle scikit-learn entraîné et calibré', 'Tableau de bord interactif', 'Prédictions en temps réel'],
+    results: [],
+    stack: ['Python', 'scikit-learn', 'Pandas', 'Streamlit'],
+    links: [{ label: 'Voir la démo', href: 'https://heart-disease-prediction-nu-nine.vercel.app/' }],
+    cover: '/assets/covers/ai_detected_hearth_attack.png',
   },
   {
     slug: 'trm-arn',
@@ -205,11 +270,62 @@ export const projects: Project[] = [
       "Architecture multi-modèles pour prédire la structure d'ARN et analyser la liaison de molécules thérapeutiques. Modèles publiés sur Hugging Face.",
     built: ['Modules spécialisés orchestrés', 'Entraînement et évaluation', 'Publication des poids'],
     results: [],
-    stack: ['Python', 'PyTorch'],
+    stack: ['Python', 'PyTorch', 'Hugging Face'],
     links: [
       { label: 'GitHub', href: 'https://github.com/Hakim78/TRM_ARN' },
       { label: 'Hugging Face', href: 'https://huggingface.co/hakim78/trm_arn' },
     ],
+    cover: '/assets/covers/trm_arn_adn_project.png',
+  },
+  {
+    slug: 'gan-celeba',
+    title: 'GAN CelebA',
+    tagline: 'Génération de visages : DCGAN, self-attention, diffusion',
+    category: 'ia-ml',
+    year: '2025',
+    role: 'Recherche et implémentation',
+    status: 'completed',
+    description:
+      'Comparaison de Vanilla GAN, DCGAN, Self-Attention GAN et DDPM sur CelebA pour la synthèse de visages.',
+    built: ['Quatre architectures génératives', 'Entraînement sur 200 000 images', 'Démo Hugging Face'],
+    results: ['FID 45,2 (SAGAN)', '64×64 → 128×128'],
+    stack: ['PyTorch', 'Python', 'Hugging Face'],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/Hakim78/GAN_Project' },
+      { label: 'Démo', href: 'https://huggingface.co/hakim78' },
+    ],
+    cover: '/assets/covers/Gan_img_cover.png',
+  },
+  {
+    slug: 'bird-ai',
+    title: 'Bird AI',
+    tagline: 'Reconnaître un oiseau à son chant',
+    category: 'ia-ml',
+    year: '2025',
+    role: 'Ingénieur IA & Full-Stack',
+    status: 'completed',
+    description:
+      'Identification d’espèces à partir de spectrogrammes audio avec un CNN construit from scratch, servi par une API et une interface web.',
+    built: ['CNN from scratch sur spectrogrammes', 'API Flask et front Vue.js', 'Module e-learning'],
+    results: ['≈ 85 % sur 50 espèces', '< 2 s d’inférence'],
+    stack: ['TensorFlow', 'Python', 'Flask', 'Vue.js'],
+    links: [{ label: 'GitHub', href: 'https://github.com/Hakim78/bird_AI' }],
+    cover: '/assets/covers/birds_ai_project.png',
+  },
+  {
+    slug: 'atari-dqn',
+    title: 'Atari Game AI',
+    tagline: 'Agent d’apprentissage par renforcement (DQN)',
+    category: 'ia-ml',
+    year: '2024',
+    role: 'Recherche et implémentation',
+    status: 'completed',
+    description: 'Agent entraîné à jouer à des jeux Atari avec des Deep Q-Networks : replay buffer, réseau cible, exploration ε-greedy.',
+    built: ['Deep Q-Network avec replay buffer et réseau cible', 'Entraînement sur OpenAI Gym', 'Suivi des récompenses'],
+    results: [],
+    stack: ['Python', 'PyTorch', 'OpenAI Gym'],
+    links: [],
+    cover: '/assets/covers/attari_project_cover.png',
   },
   {
     slug: 'ham10000-dermato',
@@ -243,24 +359,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'gan-celeba',
-    title: 'GAN CelebA',
-    tagline: 'Génération de visages : DCGAN, self-attention, diffusion',
-    category: 'ia-ml',
-    year: '2025',
-    role: 'Recherche et implémentation',
-    status: 'completed',
-    description:
-      'Comparaison de Vanilla GAN, DCGAN, Self-Attention GAN et DDPM sur CelebA pour la synthèse de visages.',
-    built: ['Quatre architectures génératives', 'Entraînement sur 200 000 images', 'Démo Hugging Face'],
-    results: ['FID 45,2 (SAGAN)', '64×64 → 128×128'],
-    stack: ['PyTorch', 'GAN', 'DDPM'],
-    links: [
-      { label: 'GitHub', href: 'https://github.com/Hakim78/GAN_Project' },
-      { label: 'Démo', href: 'https://huggingface.co/hakim78' },
-    ],
-  },
-  {
     slug: 'transformer-qa',
     title: 'Transformer Q&A',
     tagline: 'Encoder-decoder from scratch sur SQuAD 2.0',
@@ -272,26 +370,11 @@ export const projects: Project[] = [
       'Transformer encoder-decoder écrit from scratch pour le question-answering, avec beam search, label smoothing et un système RAG sur FAISS.',
     built: ['6 couches, 8 têtes, 256 dimensions', 'Beam search avec pénalité de longueur', 'RAG avec FAISS'],
     results: ['≈ 26,7 M paramètres'],
-    stack: ['TensorFlow', 'Transformer', 'FAISS', 'Gradio'],
+    stack: ['TensorFlow', 'Python', 'Gradio'],
     links: [
       { label: 'GitHub', href: 'https://github.com/Hakim78/LLM' },
       { label: 'Hugging Face', href: 'https://huggingface.co/hakim78/transformer-qa-squad-v4b' },
     ],
-  },
-  {
-    slug: 'asl-sign-recognition',
-    title: 'ASL Sign Recognition',
-    tagline: 'Alphabet de la langue des signes en temps réel',
-    category: 'ia-ml',
-    year: '2026',
-    role: 'Ingénieur IA',
-    status: 'completed',
-    description:
-      'Reconnaissance en temps réel de l’alphabet ASL par webcam : landmarks de la main, stabilisation temporelle, construction de mots et de phrases.',
-    built: ['21 landmarks MediaPipe', 'Stabilisation temporelle et auto-correction', 'Démo Hugging Face'],
-    results: ['≈ 94 % de précision', '30 images / s'],
-    stack: ['TensorFlow', 'MediaPipe', 'OpenCV'],
-    links: [{ label: 'GitHub', href: 'https://github.com/Hakim78/AI-SignLanguage' }],
   },
   {
     slug: 'drone-navigation',
@@ -305,23 +388,8 @@ export const projects: Project[] = [
       'Système de navigation autonome pour drone en environnement sans GPS : modules Transformer spécialisés (odométrie visuelle, profondeur, IMU) fusionnés par un orchestrateur, pensés pour l’embarqué.',
     built: ['TRM-VO ≈ 1,5 M paramètres', 'TRM-Depth ≈ 800 K', 'TRM-IMU ≈ 300 K', 'Orchestrateur de fusion'],
     results: ['≈ 2,8 M paramètres au total', 'Cible : dérive < 2 % sur 50 m'],
-    stack: ['PyTorch', 'Gazebo'],
+    stack: ['PyTorch', 'Python'],
     links: [],
-  },
-  {
-    slug: 'bird-ai',
-    title: 'Bird AI',
-    tagline: 'Reconnaître un oiseau à son chant',
-    category: 'ia-ml',
-    year: '2025',
-    role: 'Ingénieur IA & Full-Stack',
-    status: 'completed',
-    description:
-      'Identification d’espèces à partir de spectrogrammes audio avec un CNN construit from scratch, servi par une API et une interface web.',
-    built: ['CNN from scratch sur spectrogrammes', 'API Flask et front Vue.js', 'Module e-learning'],
-    results: ['≈ 85 % sur 50 espèces', '< 2 s d’inférence'],
-    stack: ['TensorFlow', 'Librosa', 'Flask', 'Vue.js'],
-    links: [{ label: 'GitHub', href: 'https://github.com/Hakim78/bird_AI' }],
   },
   {
     slug: 'kbo-pipeline',
@@ -348,7 +416,7 @@ export const projects: Project[] = [
     description: 'Traitement en temps réel de données météorologiques avec une architecture Lambda : couche batch et couche vitesse sur Kafka.',
     built: ['Ingestion Kafka', 'Couche batch et couche temps réel'],
     results: [],
-    stack: ['Kafka', 'Python'],
+    stack: ['Kafka', 'Python', 'Docker'],
     links: [{ label: 'GitHub', href: 'https://github.com/Hakim78/TP_KAFKA' }],
   },
   {
@@ -362,7 +430,7 @@ export const projects: Project[] = [
     description: 'Pipeline Big Data orchestré par Airflow pour collecter, traiter et exposer des données de qualité de l’air.',
     built: ['DAG Airflow', 'Transformation et stockage'],
     results: [],
-    stack: ['Airflow', 'Python'],
+    stack: ['Airflow', 'Python', 'PostgreSQL'],
     links: [{ label: 'GitHub', href: 'https://github.com/Hakim78/quality_air_data' }],
   },
   {
@@ -377,7 +445,7 @@ export const projects: Project[] = [
     description: 'Mise en place et exploitation de l’infrastructure des plateformes facil-it.ai : VPS, Docker, Nginx, bases MySQL et RDS, workers, CI/CD.',
     built: ['Déploiement Docker', 'Nginx et Gunicorn', 'MySQL / RDS, NAS', 'CI/CD'],
     results: [],
-    stack: ['AWS', 'Docker', 'Nginx', 'MySQL'],
+    stack: ['AWS', 'Docker', 'Nginx', 'MySQL', 'CI/CD'],
     links: [],
   },
 ]

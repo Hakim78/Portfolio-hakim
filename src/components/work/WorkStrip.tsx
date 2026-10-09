@@ -165,8 +165,8 @@ export function WorkStrip({ projects }: { projects: Project[] }) {
           <p className="pointer-events-auto">
             <span>Sélection</span>
             <span className="mx-2 text-fg/40">/</span>
-            <Link href="/projects" className="text-fg/50 transition-colors duration-300 hover:text-fg">
-              <RollText>Index</RollText>
+            <Link href="#grille" className="text-fg/50 transition-colors duration-300 hover:text-fg">
+              <RollText>Tous les projets</RollText>
             </Link>
           </p>
           <p className="font-mono text-xs tabular-nums text-fg/60" aria-live="polite">
