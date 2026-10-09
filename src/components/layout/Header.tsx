@@ -14,11 +14,17 @@ export function Header() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="gutter flex h-[var(--header-h)] items-center justify-between">
         <Link href="/" className="label pointer-events-auto flex items-baseline gap-3">
-          <RollText>{site.name}</RollText>
-          <span className="hidden text-fg/50 sm:inline">{site.role}</span>
+          {/* Prénom seul sur mobile : la barre doit tenir en 390 px avec la navigation */}
+          <span className="sm:hidden">
+            <RollText>{site.firstName}</RollText>
+          </span>
+          <span className="hidden sm:inline">
+            <RollText>{site.name}</RollText>
+          </span>
+          <span className="hidden text-fg/50 md:inline">{site.role}</span>
         </Link>
 
-        <nav aria-label="Navigation principale" className="pointer-events-auto flex items-center gap-5 sm:gap-8">
+        <nav aria-label="Navigation principale" className="pointer-events-auto flex items-center gap-4 sm:gap-8">
           {nav.map((item) => {
             // Sur l'accueil, les ancres restent des ancres (défilement Lenis)
             const href = pathname === '/' && item.href.startsWith('/#') ? item.href.slice(1) : item.href
@@ -27,7 +33,12 @@ export function Header() {
               <Link
                 key={item.href}
                 href={href}
-                className={cn('label transition-colors duration-300', active ? 'text-fg' : 'text-fg/60 hover:text-fg')}
+                className={cn(
+                  'label transition-colors duration-300',
+                  active ? 'text-fg' : 'text-fg/60 hover:text-fg',
+                  // Le parcours reste accessible au scroll : on le retire de la barre sur mobile
+                  item.href === '/#parcours' && 'hidden sm:inline'
+                )}
               >
                 <RollText>{item.label}</RollText>
               </Link>
