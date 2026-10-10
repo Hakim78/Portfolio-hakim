@@ -32,7 +32,7 @@ export function Skills() {
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: () => `+=${window.innerHeight * N * 0.75}`,
+        end: () => `+=${window.innerHeight * N * 0.5}`,
         pin: true,
         pinSpacing: true,
         scrub: true,

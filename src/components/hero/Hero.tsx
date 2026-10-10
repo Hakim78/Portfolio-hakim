@@ -27,10 +27,14 @@ const CFG = {
   lettersGoneAt: 0.3,
   revealStart: 0.32,
   revealEnd: 0.6,
-  maxLetterBlur: 30,
+  maxLetterBlur: 18,
   maxRevealBlur: 10,
   typeSpeed: 24,
 }
+
+/** Résolution du shader de fond : 1 sur mobile, plafonnée à 1,25 ailleurs (motif procédural, la finesse ne manque pas) */
+const shaderDpr = () =>
+  typeof window === 'undefined' ? 1 : window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio || 1, 1.25)
 
 type Line = { type: 'cmd' | 'out'; text: string; className?: string }
 
@@ -63,6 +67,18 @@ export function Hero() {
   const hintRef = useRef<HTMLButtonElement>(null)
   const [show, setShow] = useState(false)
   const [reduced, setReduced] = useState(false)
+  const [active, setActive] = useState(true)
+  const [dpr, setDpr] = useState(1)
+
+  // Le shader ne dessine que quand le hero est à l'écran
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    setDpr(shaderDpr())
+    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), { rootMargin: '10% 0px' })
+    io.observe(section)
+    return () => io.disconnect()
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -72,6 +88,8 @@ export function Hero() {
       setShow(true)
       return
     }
+    // Sur mobile, pas de flou animé : c'est le poste le plus coûteux pour le GPU
+    const mobile = window.matchMedia('(max-width: 767px)').matches
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -105,7 +123,7 @@ export function Hero() {
             rotation: (norm + rr) * CFG.rotation,
             scale: 0.3,
             opacity: 0,
-            filter: `blur(${CFG.maxLetterBlur}px)`,
+            ...(mobile ? {} : { filter: `blur(${CFG.maxLetterBlur}px)` }),
             ease: 'power2.in',
             duration: CFG.lettersGoneAt - delay,
           },
@@ -116,12 +134,12 @@ export function Hero() {
       // Terminal : apparaît net et à sa place
       tl.fromTo(
         termRef.current,
-        { opacity: 0, scale: 0.92, y: 30, filter: `blur(${CFG.maxRevealBlur}px)` },
+        { opacity: 0, scale: 0.92, y: 30, ...(mobile ? {} : { filter: `blur(${CFG.maxRevealBlur}px)` }) },
         {
           opacity: 1,
           scale: 1,
           y: 0,
-          filter: 'blur(0px)',
+          ...(mobile ? {} : { filter: 'blur(0px)' }),
           ease: 'power2.out',
           duration: CFG.revealEnd - CFG.revealStart,
         },
@@ -144,7 +162,7 @@ export function Hero() {
   }
 
   return (
-    <section ref={sectionRef} aria-label="Introduction" className={cn('relative', reduced ? 'min-h-svh' : 'h-[340vh]')}>
+    <section ref={sectionRef} aria-label="Introduction" className={cn('relative', reduced ? 'min-h-svh' : 'h-[240vh]')}>
       <div className="sticky top-0 flex h-svh w-full items-center justify-center overflow-hidden bg-black">
         {/* Fond shader */}
         <div className="absolute inset-0 z-0">
@@ -156,6 +174,8 @@ export function Hero() {
             scanlineIntensity={0.5}
             tint="#10b981"
             brightness={0.2}
+            dpr={dpr}
+            active={active}
           />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,black_70%)]" />
         </div>

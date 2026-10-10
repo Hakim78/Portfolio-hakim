@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -23,11 +23,23 @@ const ACCENT = new Set(['AI', 'Engineer.'])
  */
 export function Intro() {
   const ref = useRef<HTMLHeadingElement>(null)
+  // Le cerveau 3D (3,8 Mo) n'est monté que sur grand écran : rien n'est téléchargé sur mobile
+  const [desktop, setDesktop] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const update = () => setDesktop(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Sur mobile, pas de flou animé (trop coûteux) : scale + opacité suffisent
+    const mobile = window.matchMedia('(max-width: 767px)').matches
 
     const words = el.querySelectorAll<HTMLElement>('.intro-word')
     const tl = gsap.timeline({
@@ -35,8 +47,8 @@ export function Intro() {
     })
     tl.fromTo(
       words,
-      { yPercent: 55, scale: 0.72, opacity: 0.06, filter: 'blur(14px)', transformOrigin: '0% 100%' },
-      { yPercent: 0, scale: 1, opacity: 1, filter: 'blur(0px)', stagger: 0.05, ease: 'none' }
+      { yPercent: 55, scale: 0.72, opacity: 0.06, transformOrigin: '0% 100%', ...(mobile ? {} : { filter: 'blur(14px)' }) },
+      { yPercent: 0, scale: 1, opacity: 1, stagger: 0.05, ease: 'none', ...(mobile ? {} : { filter: 'blur(0px)' }) }
     )
     return () => {
       tl.scrollTrigger?.kill()
@@ -68,7 +80,7 @@ export function Intro() {
         <div className="col-span-12 hidden lg:col-span-4 lg:block">
           <div className="relative aspect-square w-full">
             <div className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.22),transparent_65%)] blur-3xl" />
-            <Brain className="absolute inset-0" />
+            {desktop && <Brain className="absolute inset-0" />}
           </div>
         </div>
       </div>

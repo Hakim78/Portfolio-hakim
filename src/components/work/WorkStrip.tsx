@@ -62,6 +62,10 @@ export function WorkStrip({ projects }: { projects: Project[] }) {
     const ro = new ResizeObserver(measure)
     ro.observe(document.documentElement)
 
+    // Rendu uniquement quand la section est (presque) à l'écran
+    const io = new IntersectionObserver(([e]) => strip.setActive(e.isIntersecting), { rootMargin: '15% 0px' })
+    io.observe(section)
+
     // ── Pointeur : survol, glisser, clic ──
     let dragging = false
     let lastX = 0
@@ -134,6 +138,7 @@ export function WorkStrip({ projects }: { projects: Project[] }) {
 
     return () => {
       ro.disconnect()
+      io.disconnect()
       canvas.removeEventListener('pointerdown', onDown)
       canvas.removeEventListener('pointermove', onMove)
       canvas.removeEventListener('pointerup', onUp)

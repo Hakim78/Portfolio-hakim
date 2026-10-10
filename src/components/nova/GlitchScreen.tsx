@@ -219,17 +219,25 @@ export default function GlitchScreen({ mood, levelRef, accent, reduced = false, 
 
     let raf = 0;
     let last = 0;
+    let visible = true;
     const interval = 1000 / 30; // 30 fps suffisent pour un écran rétro
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
-      if (now - last < interval) return;
+      if (!visible || now - last < interval) return;
       last = now;
       draw(now);
     };
     raf = requestAnimationFrame(frame);
 
+    // Hors écran : l'écran ne se redessine plus (intégration portfolio)
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    io.observe(wrap);
+
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener('pointermove', onMove);
     };
   }, [levelRef, reduced]);

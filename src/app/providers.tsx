@@ -32,10 +32,11 @@ export function Providers({ children }: { children: ReactNode }) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const overlay = overlayRef.current
 
+    // Scroll vif : interpolation plus franche et molette amplifiée
     const lenis = new Lenis({
-      lerp: reduced ? 1 : 0.085,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.4,
+      lerp: reduced ? 1 : 0.13,
+      wheelMultiplier: 1.35,
+      touchMultiplier: 1.6,
       smoothWheel: !reduced,
     })
     setLenis(lenis)
@@ -48,7 +49,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
     const scrollToHash = (hash: string) => {
       const target = hash ? document.getElementById(hash.replace(/^#/, '')) : null
-      if (target) lenis.scrollTo(target, { duration: reduced ? 0 : 1.4 })
+      if (target) lenis.scrollTo(target, { duration: reduced ? 0 : 1.1 })
       return !!target
     }
 

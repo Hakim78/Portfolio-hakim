@@ -42,7 +42,7 @@ export class Strip {
   private readonly renderer: THREE.WebGLRenderer
   private readonly scene = new THREE.Scene()
   private readonly camera: THREE.PerspectiveCamera
-  private readonly geometry = new THREE.PlaneGeometry(1, 1, 72, 36)
+  private readonly geometry = new THREE.PlaneGeometry(1, 1, 56, 28)
   private readonly cards: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>[] = []
   private readonly grid: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>
   private readonly raycaster = new THREE.Raycaster()
@@ -72,6 +72,12 @@ export class Strip {
 
   private raf = 0
   private disposed = false
+  private active = true
+
+  /** false quand la section est hors écran : plus aucun rendu jusqu'au retour */
+  setActive(active: boolean) {
+    this.active = active
+  }
 
   constructor(canvas: HTMLCanvasElement, items: CardContent[], opts: StripOptions) {
     this.items = items
@@ -80,7 +86,8 @@ export class Strip {
 
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' })
     this.renderer.setClearColor(0x000000, 1)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    // Plafond 1,5 : les textures des cartes font 2048 px, la finesse ne manque pas
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
 
     this.camera = new THREE.PerspectiveCamera(FOV, 1, 1, 10000)
 
@@ -222,6 +229,10 @@ export class Strip {
   private frame = () => {
     if (this.disposed) return
     this.raf = requestAnimationFrame(this.frame)
+    if (!this.active) {
+      this.clock.getDelta() // on consomme le temps écoulé pour repartir sans à-coup
+      return
+    }
 
     const dt = clamp(this.clock.getDelta(), 0.001, 0.05)
     const f = dt * 60 // facteur de normalisation à 60 i/s

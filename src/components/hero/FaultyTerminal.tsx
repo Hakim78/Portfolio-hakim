@@ -11,6 +11,8 @@ export interface FaultyTerminalProps extends React.HTMLAttributes<HTMLDivElement
   digitSize?: number;
   timeScale?: number;
   pause?: boolean;
+  /** false : ne dessine plus (section hors écran) ; la boucle reste prête à reprendre */
+  active?: boolean;
   scanlineIntensity?: number;
   glitchAmount?: number;
   flickerAmount?: number;
@@ -249,6 +251,7 @@ export default function FaultyTerminal({
   digitSize = 1.5,
   timeScale = 0.3,
   pause = false,
+  active = true,
   scanlineIntensity = 0.3,
   glitchAmount = 1,
   flickerAmount = 1,
@@ -274,6 +277,10 @@ export default function FaultyTerminal({
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
   const frozenTimeRef = useRef(0);
   const rafRef = useRef<number>(0);
+  const activeRef = useRef(active);
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
   const loadAnimationStartRef = useRef<number>(0);
   const timeOffsetRef = useRef<number>(Math.random() * 100);
 
@@ -376,6 +383,8 @@ export default function FaultyTerminal({
 
     const update = (t: number) => {
       rafRef.current = requestAnimationFrame(update);
+      // Hors écran : rien à dessiner (économise GPU et batterie)
+      if (!activeRef.current) return;
 
       if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
         loadAnimationStartRef.current = t;
