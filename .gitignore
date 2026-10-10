@@ -49,3 +49,8 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+
+# Vercel (lien de projet local, variables téléchargées)
+.vercel
+.env*.local
